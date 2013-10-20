@@ -4,8 +4,9 @@ require 'debugger'
 
 class Session
   COOKIE_NAME = '_rails_lite_app'
+
   def initialize(req)
-    cookie = req.cookies.find {|c| c.name == 'COOKIE_NAME' }
+    cookie = req.cookies.find {|c| c.name == COOKIE_NAME }
     @cookie_value_hash = cookie.nil? ? {} : JSON.parse(cookie.value)
   end
 
@@ -18,10 +19,10 @@ class Session
   end
 
   def store_session(res)
-    res.cookies << WEBrick::Cookie.new(
-      'COOKIE_NAME',
-      @cookie_value_hash.to_json
-    )
+    #for clarity
+    cookie_value = @cookie_value_hash.to_json
+    new_cookie = WEBrick::Cookie.new(COOKIE_NAME, cookie_value)
+    res.cookies << new_cookie
   end
 
 end
